@@ -99,6 +99,20 @@ public class usagecount extends AppCompatActivity {
         start_time = System.currentTimeMillis();
         stop_record_time = start_time+ 60*1000;//結束時間設為一分鐘後
         Log.d("state", "s"+state);
+//        if(state == "true"){
+//            //axis_recorder.start_record(sensorManager, true);//九軸開幾紀錄
+//            start_listen_nine_axis();
+//            sound_recorder.startRecord();//分貝開始記錄
+//            startListenAudio();//存取資料在陣列裡的執行續
+//            Log.d("紀錄", "開始");
+//        }
+//        CheckState_SubmitRecord();
+//        CheckRecordtime_SubmitRecord();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         if(state == "true"){
             //axis_recorder.start_record(sensorManager, true);//九軸開幾紀錄
             start_listen_nine_axis();
@@ -109,6 +123,7 @@ public class usagecount extends AppCompatActivity {
         CheckState_SubmitRecord();
         CheckRecordtime_SubmitRecord();
     }
+
     public void usagetime(long stopuse){
         UsageStatsManager usm = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);
         Calendar calendar1 = Calendar.getInstance();
@@ -157,7 +172,7 @@ public class usagecount extends AppCompatActivity {
             public void run() {
                 while(System.currentTimeMillis() <= stop_record_time){
                         if(System.currentTimeMillis() == stop_record_time){
-                            //axis_recorder.start_record(sensorManager,false);//九軸停止紀錄(但現在我註解掉了)
+                            axis_recorder.start_record(sensorManager,false);//九軸停止紀錄(但現在我註解掉了)
                             sound_recorder.stopRecord();//停止錄音
                             for(int i = 0;i<name.size();i++){
                                 dbSoundaxis.insert(id.get(i).toString(),(String) name.get(i), (Timestamp) date_time.get(i),Double.parseDouble(x_axis.get(i).toString()),Double.parseDouble(y_axis.get(i).toString()),Double.parseDouble(z_axis.get(i).toString()),Double.parseDouble(sound_db.get(i).toString()));
@@ -167,45 +182,74 @@ public class usagecount extends AppCompatActivity {
                             Log.d("TAG", "九軸&分貝資料上傳");
                         }
                 }
+                Cursor update_cursor = dbSoundaxis.select_update();
+                for(int i = 0; i<update_cursor.getCount();i++){
+                    update_cursor.moveToPosition(i);
+                    up_id.add(update_cursor.getString(update_cursor.getColumnIndex("_id")));
+                    up_name.add(update_cursor.getString(update_cursor.getColumnIndex("name")));
+                    up_date_time.add((update_cursor.getString(update_cursor.getColumnIndex("date_time"))));
+                    up_x_axis.add((update_cursor.getString(update_cursor.getColumnIndex("x_axis"))));
+                    up_y_axis.add((update_cursor.getString(update_cursor.getColumnIndex("y_axis"))));
+                    up_z_axis.add((update_cursor.getString(update_cursor.getColumnIndex("z_axis"))));
+                    up_sound_db.add((update_cursor.getString(update_cursor.getColumnIndex("sound_db"))));
+                }
+                sql = "INSERT INTO `sound_axis_record` (`User_id`, `Name`, `Date_time`, `X_axis`, `Y_axis`, `Z_axis`, `Sound_db`) VALUES";
+                for(int i = 0;i<up_name.size();i++){
+                    String id = up_id.get(i).toString();
+                    String name = (String) up_name.get(i);
+                    Timestamp time = Timestamp.valueOf(up_date_time.get(i).toString());
+                    double x_axis = Double.parseDouble(up_x_axis.get(i).toString());
+                    double y_axis = Double.parseDouble(up_y_axis.get(i).toString());
+                    double z_axis = Double.parseDouble(up_z_axis.get(i).toString());
+                    double sound_db = Double.parseDouble(up_sound_db.get(i).toString());
+                    if(i == up_name.size()-1){
+                        sqltmp = sqltmp+"('"+id+"','"+name+"', '"+time+"', '"+x_axis+"', '"+y_axis+"', '"+z_axis+"', '"+sound_db+"');";
+                    }else {
+                        sqltmp = sqltmp+"('"+id+"','"+name+"', '"+time+"', '"+x_axis+"', '"+y_axis+"', '"+z_axis+"', '"+sound_db+"'),";
+                    }
+                }
+                sql = sql+sqltmp;
+                Log.d("sql語法",sql);
+                connecting.connect("insert_sql",sql);
+                dbSoundaxis.update_state_change();
             }
         });
         thread_check_time.start();
-        try {
-            thread_check_time.join();
-            Cursor update_cursor = dbSoundaxis.select_update();
-            for(int i = 0; i<update_cursor.getCount();i++){
-                update_cursor.moveToPosition(i);
-                up_id.add(update_cursor.getString(update_cursor.getColumnIndex("_id")));
-                up_name.add(update_cursor.getString(update_cursor.getColumnIndex("name")));
-                up_date_time.add((update_cursor.getString(update_cursor.getColumnIndex("date_time"))));
-                up_x_axis.add((update_cursor.getString(update_cursor.getColumnIndex("x_axis"))));
-                up_y_axis.add((update_cursor.getString(update_cursor.getColumnIndex("y_axis"))));
-                up_z_axis.add((update_cursor.getString(update_cursor.getColumnIndex("z_axis"))));
-                up_sound_db.add((update_cursor.getString(update_cursor.getColumnIndex("sound_db"))));
-            }
-            sql = "INSERT INTO `sound_axis_record` (`User_id`, `Name`, `Date_time`, `X_axis`, `Y_axis`, `Z_axis`, `Sound_db`) VALUES";
-            for(int i = 0;i<up_name.size();i++){
-                String id = up_id.get(i).toString();
-                String name = (String) up_name.get(i);
-                Timestamp time = Timestamp.valueOf(up_date_time.get(i).toString());
-                double x_axis = Double.parseDouble(up_x_axis.get(i).toString());
-                double y_axis = Double.parseDouble(up_y_axis.get(i).toString());
-                double z_axis = Double.parseDouble(up_z_axis.get(i).toString());
-                double sound_db = Double.parseDouble(up_sound_db.get(i).toString());
-                if(i == up_name.size()-1){
-                    sqltmp = sqltmp+"('"+id+"','"+name+"', '"+time+"', '"+x_axis+"', '"+y_axis+"', '"+z_axis+"', '"+sound_db+"');";
-                }else {
-                    sqltmp = sqltmp+"('"+id+"','"+name+"', '"+time+"', '"+x_axis+"', '"+y_axis+"', '"+z_axis+"', '"+sound_db+"'),";
-                }
-            }
-            sql = sql+sqltmp;
-            Log.d("sql語法",sql);
-            connecting.connect("insert_sql",sql);
-            dbSoundaxis.update_state_change();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+//        try {
+//            thread_check_time.join();
+//            Cursor update_cursor = dbSoundaxis.select_update();
+//            for(int i = 0; i<update_cursor.getCount();i++){
+//                update_cursor.moveToPosition(i);
+//                up_id.add(update_cursor.getString(update_cursor.getColumnIndex("_id")));
+//                up_name.add(update_cursor.getString(update_cursor.getColumnIndex("name")));
+//                up_date_time.add((update_cursor.getString(update_cursor.getColumnIndex("date_time"))));
+//                up_x_axis.add((update_cursor.getString(update_cursor.getColumnIndex("x_axis"))));
+//                up_y_axis.add((update_cursor.getString(update_cursor.getColumnIndex("y_axis"))));
+//                up_z_axis.add((update_cursor.getString(update_cursor.getColumnIndex("z_axis"))));
+//                up_sound_db.add((update_cursor.getString(update_cursor.getColumnIndex("sound_db"))));
+//            }
+//            sql = "INSERT INTO `sound_axis_record` (`User_id`, `Name`, `Date_time`, `X_axis`, `Y_axis`, `Z_axis`, `Sound_db`) VALUES";
+//            for(int i = 0;i<up_name.size();i++){
+//                String id = up_id.get(i).toString();
+//                String name = (String) up_name.get(i);
+//                Timestamp time = Timestamp.valueOf(up_date_time.get(i).toString());
+//                double x_axis = Double.parseDouble(up_x_axis.get(i).toString());
+//                double y_axis = Double.parseDouble(up_y_axis.get(i).toString());
+//                double z_axis = Double.parseDouble(up_z_axis.get(i).toString());
+//                double sound_db = Double.parseDouble(up_sound_db.get(i).toString());
+//                if(i == up_name.size()-1){
+//                    sqltmp = sqltmp+"('"+id+"','"+name+"', '"+time+"', '"+x_axis+"', '"+y_axis+"', '"+z_axis+"', '"+sound_db+"');";
+//                }else {
+//                    sqltmp = sqltmp+"('"+id+"','"+name+"', '"+time+"', '"+x_axis+"', '"+y_axis+"', '"+z_axis+"', '"+sound_db+"'),";
+//                }
+//            }
+//            sql = sql+sqltmp;
+//            Log.d("sql語法",sql);
+//            connecting.connect("insert_sql",sql);
+//            dbSoundaxis.update_state_change();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
     public void CheckState_SubmitRecord(){
         Thread thread_check_state = new Thread(new Runnable() {
@@ -230,36 +274,59 @@ public class usagecount extends AppCompatActivity {
                     Log.d("紀錄", "結束");
                     Log.d("TAG", "螢幕使用狀態上傳");
                 }
+
+                Cursor update_cursor = dbUsage.select_update();
+                for(int i = 0; i<update_cursor.getCount();i++){
+                    update_cursor.moveToPosition(i);
+                    up_id_u.add(update_cursor.getString(update_cursor.getColumnIndex("id")));
+                    up_date_time_u.add(update_cursor.getString(update_cursor.getColumnIndex("date")));
+                    up_period_u.add((update_cursor.getString(update_cursor.getColumnIndex("period"))));
+                }
+                sql_u = "INSERT INTO `screen_record` (`Date`, `User_id`, `Period`) VALUES";
+                for(int i = 0;i<up_id_u.size();i++){
+                    String id = up_id_u.get(i).toString();
+                    int time = Integer.parseInt(up_date_time_u.get(i).toString());
+                    int period  = Integer.parseInt(up_period_u.get(i).toString());
+                    if(i == up_id_u.size()-1){
+                        sql_u_tmp = sql_u_tmp+"('"+time+"','"+id+"', '"+period+"');";
+                    }else {
+                        sql_u_tmp = sql_u_tmp+"('"+time+"','"+id+"', '"+period+"'),";
+                    }
+                }
+                sql_u = sql_u+sql_u_tmp;
+                Log.d("sql語法",sql_u);
+                connecting.connect("insert_sql",sql_u);
+                dbUsage.update_state_change();
             }
         });
         thread_check_state.start();
-        try {
-            thread_check_state.join();
-            Cursor update_cursor = dbUsage.select_update();
-            for(int i = 0; i<update_cursor.getCount();i++){
-                update_cursor.moveToPosition(i);
-                up_id_u.add(update_cursor.getString(update_cursor.getColumnIndex("id")));
-                up_date_time_u.add(update_cursor.getString(update_cursor.getColumnIndex("date")));
-                up_period_u.add((update_cursor.getString(update_cursor.getColumnIndex("period"))));
-            }
-            sql_u = "INSERT INTO `screen_record` (`Date`, `User_id`, `Period`) VALUES";
-            for(int i = 0;i<up_id_u.size();i++){
-                String id = up_id_u.get(i).toString();
-                int time = Integer.parseInt(up_date_time_u.get(i).toString());
-                int period  = Integer.parseInt(up_period_u.get(i).toString());
-                if(i == up_id_u.size()-1){
-                    sql_u_tmp = sql_u_tmp+"('"+time+"','"+id+"', '"+period+"');";
-                }else {
-                    sql_u_tmp = sql_u_tmp+"('"+time+"','"+id+"', '"+period+"'),";
-                }
-            }
-            sql_u = sql_u+sql_u_tmp;
-            Log.d("sql語法",sql_u);
-            connecting.connect("insert_sql",sql_u);
-            dbUsage.update_state_change();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            thread_check_state.join();
+//            Cursor update_cursor = dbUsage.select_update();
+//            for(int i = 0; i<update_cursor.getCount();i++){
+//                update_cursor.moveToPosition(i);
+//                up_id_u.add(update_cursor.getString(update_cursor.getColumnIndex("id")));
+//                up_date_time_u.add(update_cursor.getString(update_cursor.getColumnIndex("date")));
+//                up_period_u.add((update_cursor.getString(update_cursor.getColumnIndex("period"))));
+//            }
+//            sql_u = "INSERT INTO `screen_record` (`Date`, `User_id`, `Period`) VALUES";
+//            for(int i = 0;i<up_id_u.size();i++){
+//                String id = up_id_u.get(i).toString();
+//                int time = Integer.parseInt(up_date_time_u.get(i).toString());
+//                int period  = Integer.parseInt(up_period_u.get(i).toString());
+//                if(i == up_id_u.size()-1){
+//                    sql_u_tmp = sql_u_tmp+"('"+time+"','"+id+"', '"+period+"');";
+//                }else {
+//                    sql_u_tmp = sql_u_tmp+"('"+time+"','"+id+"', '"+period+"'),";
+//                }
+//            }
+//            sql_u = sql_u+sql_u_tmp;
+//            Log.d("sql語法",sql_u);
+//            connecting.connect("insert_sql",sql_u);
+//            dbUsage.update_state_change();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
     }
     public void startListenAudio() {
         final int Base = 1;

@@ -47,6 +47,7 @@ public class Nine_axis_record  implements SensorEventListener {
         }
     }
 
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         //Log.d("九軸","狀態(state)："+state);
@@ -58,7 +59,7 @@ public class Nine_axis_record  implements SensorEventListener {
             y = event.values[1];
             z = event.values[2];
             // 根據三個方向上的加速度值得到總的加速度值a
-            Log.d("九軸","X軸："+x+"Y軸："+y+"Z軸："+z);
+            //Log.d("九軸","X軸："+x+"Y軸："+y+"Z軸："+z);
 //            System.out.println("x---------->" + x);
 //            System.out.println("y---------->" + y);
 //            System.out.println("z---------->" + z);
