@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".usage">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/tt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:textSize="14pt"
+        android:paddingTop="8dp"
+        android:text="Set Time"/>
+
+    <ListView
+        android:id="@+id/db_usage_listview"
+        android:layout_width="match_parent"
+        android:layout_height="269dp"
+        android:layout_marginTop="100dp" />
+
+    <ListView
+        android:id="@+id/db_soundaxis_listview"
+        android:layout_width="match_parent"
+        android:layout_height="228dp"
+        android:layout_marginTop="370dp" />
+</FrameLayout>
