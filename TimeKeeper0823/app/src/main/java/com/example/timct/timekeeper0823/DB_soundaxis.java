@@ -57,7 +57,6 @@ public class DB_soundaxis extends SQLiteOpenHelper{
         return cursor;
     }
     public Cursor select_update(){
-        String select_column[] = {"state"};
         String select_state[] = {"0"};
         Cursor cursor = db.query("record",null,"state=?",select_state,null,null,null);
         //Cursor cursor = db.query("record",null,null,null,null,null,null);

@@ -99,20 +99,6 @@ public class usagecount extends AppCompatActivity {
         start_time = System.currentTimeMillis();
         stop_record_time = start_time+ 60*1000;//結束時間設為一分鐘後
         Log.d("state", "s"+state);
-//        if(state == "true"){
-//            //axis_recorder.start_record(sensorManager, true);//九軸開幾紀錄
-//            start_listen_nine_axis();
-//            sound_recorder.startRecord();//分貝開始記錄
-//            startListenAudio();//存取資料在陣列裡的執行續
-//            Log.d("紀錄", "開始");
-//        }
-//        CheckState_SubmitRecord();
-//        CheckRecordtime_SubmitRecord();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         if(state == "true"){
             //axis_recorder.start_record(sensorManager, true);//九軸開幾紀錄
             start_listen_nine_axis();
@@ -123,6 +109,20 @@ public class usagecount extends AppCompatActivity {
         CheckState_SubmitRecord();
         CheckRecordtime_SubmitRecord();
     }
+
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        if(state == "true"){
+//            //axis_recorder.start_record(sensorManager, true);//九軸開幾紀錄
+//            start_listen_nine_axis();
+//            sound_recorder.startRecord();//分貝開始記錄
+//            startListenAudio();//存取資料在陣列裡的執行續
+//            Log.d("紀錄", "開始");
+//        }
+//        CheckState_SubmitRecord();
+//        CheckRecordtime_SubmitRecord();
+//    }
 
     public void usagetime(long stopuse){
         UsageStatsManager usm = (UsageStatsManager) getSystemService(Context.USAGE_STATS_SERVICE);

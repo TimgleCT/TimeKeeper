@@ -24,7 +24,7 @@ public class alarmalert extends AppCompatActivity {
         Window win = getWindow();
         win.addFlags(WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
         win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        setContentView(R.layout.activity_alarmalert);
+        //setContentView(R.layout.activity_alarmalert);
         mp = new MediaPlayer();
 
         mp = MediaPlayer.create(this, R.raw.test);
@@ -67,6 +67,7 @@ public class alarmalert extends AppCompatActivity {
                 intent1.putExtra("time", time);
                 startActivity(intent1);
                 mp.stop();
+                finish();
             }
         });
         builder.show();
