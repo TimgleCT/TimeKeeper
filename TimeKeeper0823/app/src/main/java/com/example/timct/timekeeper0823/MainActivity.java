@@ -1,6 +1,7 @@
 package com.example.timct.timekeeper0823;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
@@ -11,9 +12,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String KEY = "com.example.timct.timekeeper0823.app";
     private android.support.design.widget.TabLayout mTabs;
     private ViewPager mViewPager;
     private FragmentManager mfm;
@@ -30,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO},BuildDev.RECORD_AUDIO);
+        }
+
+        final String user = getSharedPreferences(KEY,MODE_PRIVATE).getString("u_id",null);
+        final String pwd = getSharedPreferences(KEY,MODE_PRIVATE).getString("u_pwd",null);
+        if(user == null || pwd == null){
+            Intent intent = new Intent(MainActivity.this, login.class);
+            startActivity(intent);
         }
 
         mTabs = (android.support.design.widget.TabLayout) findViewById(R.id.tabs);

@@ -20,6 +20,7 @@ import java.util.List;
 public class Connect_To_Server {
     //private final static String mUrl = "http://192.168.43.42:80/TimeKeeper/index.php";
     private final static String mUrl = "http://140.127.218.207:80/Connecter.php";
+    public String get_data = "";
     public void connect(final String sqltype, final String sql){
         Thread connecting = new Thread(new Runnable() {
             @Override
@@ -48,6 +49,7 @@ public class Connect_To_Server {
 
                     if(entity != null){
                         data.putString("key", EntityUtils.toString(entity,"utf-8"));//如果成功將網頁內容存入key
+                        get_data = data.getString("key");
                         handler_Success.sendMessage(msg);
                     }
                     else{
@@ -88,7 +90,7 @@ public class Connect_To_Server {
             Bundle data = msg.getData();
             String val = data.getString("key");
             Log.d("上傳Server","失敗"+val);
-            //Toast.makeText(getApplicationContext(), val, Toast.LENGTH_LONG).show();
+
         }
     };
 
@@ -99,7 +101,7 @@ public class Connect_To_Server {
             Bundle data = msg.getData();
             String val = data.getString("key");
             Log.d("上傳Server","失敗"+val);
-            //Toast.makeText(getApplicationContext(), val, Toast.LENGTH_LONG).show();
+
         }
     };
 }

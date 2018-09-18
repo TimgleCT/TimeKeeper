@@ -7,6 +7,7 @@ import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
@@ -24,6 +25,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import static android.content.Context.ALARM_SERVICE;
+import static android.content.Context.MODE_PRIVATE;
+import static com.example.timct.timekeeper0823.MainActivity.KEY;
 
 
 public class alarm extends Fragment {
@@ -31,7 +34,7 @@ public class alarm extends Fragment {
     private Button btnsubmit;
     private View view;
     private TextView tvtime;
-    private Button btnadd;
+    private Button btnadd,logout;
     private CheckBox checkBox;
     private TimePicker timePicker;
     private int hour;
@@ -49,6 +52,18 @@ public class alarm extends Fragment {
             Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
             startActivity(intent);
         }
+
+        logout = (Button) view.findViewById(R.id.logout);
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences pref  = getActivity().getSharedPreferences(KEY,MODE_PRIVATE);
+                pref.edit().clear().commit();
+                Intent intent = new Intent(view.getContext(), MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
         setalarm();
 
         return view;

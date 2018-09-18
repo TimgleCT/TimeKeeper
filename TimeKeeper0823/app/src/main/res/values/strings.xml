@@ -2,4 +2,8 @@
     <string name="app_name">TimeKeeper時間管家(0823)</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_alarmalert">alarmalert</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
 </resources>
