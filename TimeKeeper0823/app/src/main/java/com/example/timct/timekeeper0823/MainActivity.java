@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     public static final String KEY = "com.example.timct.timekeeper0823.app";
+    public static boolean logon = false;
     private android.support.design.widget.TabLayout mTabs;
     private ViewPager mViewPager;
     private FragmentManager mfm;
@@ -37,42 +38,41 @@ public class MainActivity extends AppCompatActivity {
 
         final String user = getSharedPreferences(KEY,MODE_PRIVATE).getString("u_id",null);
         final String pwd = getSharedPreferences(KEY,MODE_PRIVATE).getString("u_pwd",null);
-        if(user == null || pwd == null){
+        if(user ==null ||pwd == null){
             Intent intent = new Intent(MainActivity.this, login.class);
             startActivity(intent);
         }
+            mTabs = (android.support.design.widget.TabLayout) findViewById(R.id.tabs);
+            mViewPager = (ViewPager) findViewById(R.id.viewpager);
 
-        mTabs = (android.support.design.widget.TabLayout) findViewById(R.id.tabs);
-        mViewPager = (ViewPager) findViewById(R.id.viewpager);
+            mTabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
+            mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabs));
 
-        mTabs.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabs));
-
-        mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
-            @Override
-            public Fragment getItem(int position) {
-                switch (position) {
-                    case 0:
-                        return alarm;
-                    case 1:
-                        return usage;
+            mViewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
+                @Override
+                public Fragment getItem(int position) {
+                    switch (position) {
+                        case 0:
+                            return alarm;
+                        case 1:
+                            return usage;
+                    }
+                    return null;
                 }
-                return null;
-            }
 
-            @Override
-            public int getCount() {
-                return 2;
-            }
+                @Override
+                public int getCount() {
+                    return 2;
+                }
 
-        });
+            });
 
-        alarm.getData(new alarm.CallBack() {
-            @Override
-            public void getResult(long result) {
+            alarm.getData(new alarm.CallBack() {
+                @Override
+                public void getResult(long result) {
 
-            }
-        });
+                }
+            });
 
     }
 

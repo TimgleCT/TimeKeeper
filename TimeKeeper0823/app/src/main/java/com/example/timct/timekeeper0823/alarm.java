@@ -27,6 +27,7 @@ import java.util.List;
 import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.timct.timekeeper0823.MainActivity.KEY;
+import static com.example.timct.timekeeper0823.MainActivity.logon;
 
 
 public class alarm extends Fragment {
@@ -59,6 +60,7 @@ public class alarm extends Fragment {
             public void onClick(View view) {
                 SharedPreferences pref  = getActivity().getSharedPreferences(KEY,MODE_PRIVATE);
                 pref.edit().clear().commit();
+                logon = false;
                 Intent intent = new Intent(view.getContext(), MainActivity.class);
                 startActivity(intent);
             }

@@ -4,6 +4,7 @@
     <string name="title_activity_alarmalert">alarmalert</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="forgot_password">forgot_password</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
 </resources>
