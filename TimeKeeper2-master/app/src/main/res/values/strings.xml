@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="repeat">REPEAT</string>
+    <string name="repeat_show">M T W Th F</string>
+    <string name="rington">RINGTON</string>
+    <string name="rington_show">May Day - first day</string>
+    <string name="music">MUSIC</string>
+    <string name="textview">TextView</string>
+    <string name="normal">Normal</string>
+    <string name="ai_alarm">AI Alarm</string>
+    <string name="counter">Counter</string>
+    <string name="friends">FRIENDS</string>
+    <string name="QRcode_scanner">QR code Scanner</string>
+    <string name="sign_up"><u>SIGN UP</u></string>
+    <string name="forgot_pwd"><u>Forgot my password</u></string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

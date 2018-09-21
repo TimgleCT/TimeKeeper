@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cardUseCompatPadding="true">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/cView"
+            android:layout_width="wrap_content"
+            android:layout_height="231dp"
+            android:layout_gravity="center"
+            android:src="@drawable/holiday"
+            android:layout_marginTop="-6dp"/>
+
+        <Switch
+            android:id="@+id/switch1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="30dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/cText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:text="123123123131"
+        android:textAlignment="center"
+        android:lineSpacingMultiplier="1.2"
+        android:layout_marginTop="230dp" />
+
+</android.support.v7.widget.CardView>
